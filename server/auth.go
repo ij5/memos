@@ -196,6 +196,30 @@ func (s *Server) registerAuthRoutes(g *echo.Group) {
 		if err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create user").SetInternal(err)
 		}
+		_, err = s.Store.UpsertUserSetting(ctx, &api.UserSettingUpsert{
+			UserID: user.ID,
+			Key:    api.UserSettingLocaleKey,
+			Value:  "\"ko\"",
+		})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to upsert user setting").SetInternal(err)
+		}
+		_, err = s.Store.UpsertUserSetting(ctx, &api.UserSettingUpsert{
+			UserID: user.ID,
+			Key:    api.UserSettingResourceVisibilityKey,
+			Value:  "\"PUBLIC\"",
+		})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to upsert user setting").SetInternal(err)
+		}
+		_, err = s.Store.UpsertUserSetting(ctx, &api.UserSettingUpsert{
+			UserID: user.ID,
+			Key:    api.UserSettingMemoVisibilityKey,
+			Value:  "\"PUBLIC\"",
+		})
+		if err != nil {
+			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to upsert user setting").SetInternal(err)
+		}
 		if err := s.createUserAuthSignUpActivity(c, user); err != nil {
 			return echo.NewHTTPError(http.StatusInternalServerError, "Failed to create activity").SetInternal(err)
 		}
